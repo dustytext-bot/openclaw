@@ -488,7 +488,7 @@ function deriveCoverageScores(
   for (const report of coverageSummary.scorecard?.categoryReports ?? []) {
     categories.set(
       qaMaturityCoverageCategoryKey(report.surfaceId, report.name),
-      qaMaturityScoreObjectForScore(Math.round(report.features.fulfillmentPercent)),
+      qaMaturityScoreObjectForScore(Math.round(report.coverageIds.fulfillmentPercent)),
     );
   }
 
@@ -616,7 +616,7 @@ function renderEvidenceSection(
   ];
 
   const summaryRows: RenderScalar[][] = [
-    ["Check set", "Completed", "Checks run", "Results", "Areas reviewed", "Capabilities reviewed"],
+    ["Check set", "Completed", "Checks run", "Results", "Areas reviewed", "Coverage IDs reviewed"],
   ];
   for (const item of scorecardSummaries) {
     const scorecard = item.scorecard;
@@ -626,7 +626,7 @@ function renderEvidenceSection(
       item.entryCount,
       markdownEscape(resultCountsText(item.statuses)),
       markdownEscape(countText(scorecard?.categories)),
-      markdownEscape(countText(scorecard?.features)),
+      markdownEscape(countText(scorecard?.coverageIds)),
     ]);
   }
   lines.push(...markdownTable(summaryRows), "");
@@ -636,16 +636,16 @@ function renderEvidenceSection(
   );
   if (categoryRows.length > 0) {
     const readinessRows: RenderScalar[][] = [
-      ["Check set", "Surface", "Area", "Status", "Capabilities reviewed", "Follow-up"],
+      ["Check set", "Surface", "Area", "Status", "Coverage IDs reviewed", "Follow-up"],
     ];
     for (const { item, category } of categoryRows) {
-      const features = countText(category.features);
+      const coverageIds = countText(category.coverageIds);
       readinessRows.push([
         markdownEscape(checkSetTitle(item.profile)),
         markdownEscape(surfaceNames.get(category.surfaceId) ?? familyTitle(category.surfaceId)),
         markdownEscape(category.name),
         markdownEscape(readinessStatusText(category.status)),
-        markdownEscape(features),
+        markdownEscape(coverageIds),
         markdownEscape(followUpText(category.missingCoverageIds)),
       ]);
     }
